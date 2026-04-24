@@ -1,2 +1,8 @@
 version: "1.0.0"
 description: "BMP280 sensor driver for ESP-IDF"
+
+dependencies:
+  idf: ">=5.0.0"
+  hal_i2c:
+    git: "https://github.com/saisaran96/esp-idf-sensor-drivers.git"
+    path: "components/hal_i2c"
