@@ -1,0 +1,2 @@
+version: "1.0.0"
+description: "BMP280 sensor driver for ESP-IDF"
