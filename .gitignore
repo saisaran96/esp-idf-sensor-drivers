@@ -1,0 +1,11 @@
+# Build files
+build/
+sdkconfig
+sdkconfig.old
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
