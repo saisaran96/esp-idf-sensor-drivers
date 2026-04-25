@@ -1,0 +1,7 @@
+idf_component_register(
+        SRCS
+        "ssd1306.c"
+        INCLUDE_DIRS "include"
+        REQUIRES
+        hal_i2c
+)

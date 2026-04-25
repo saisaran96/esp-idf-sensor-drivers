@@ -1,0 +1,2 @@
+version: "1.0.0"
+description: "SSD1306 driver for ESP-IDF"

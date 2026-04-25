@@ -65,16 +65,33 @@ esp_err_t hal_i2c_write(hal_i2c_bus_t *bus, uint8_t addr, uint8_t reg,
 {
     if (!bus) return ESP_ERR_INVALID_ARG;
 
-    uint8_t buf[32];
-    if (len + 1 > sizeof(buf)) return ESP_ERR_INVALID_SIZE;
+    i2c_cmd_handle_t cmd = i2c_cmd_link_create();
+    if (!cmd) return ESP_ERR_NO_MEM;
 
-    buf[0] = reg;
-    if (len > 0 && data) {
-        memcpy(&buf[1], data, len);
+    esp_err_t err;
+
+    err = i2c_master_start(cmd);
+    if (err != ESP_OK) goto cleanup;
+
+    err = i2c_master_write_byte(cmd, (addr << 1) | I2C_MASTER_WRITE, true);
+    if (err != ESP_OK) goto cleanup;
+
+    err = i2c_master_write_byte(cmd, reg, true);
+    if (err != ESP_OK) goto cleanup;
+
+    if (data && len > 0) {
+        err = i2c_master_write(cmd, data, len, true);
+        if (err != ESP_OK) goto cleanup;
     }
 
-    return i2c_master_write_to_device(
-        bus->port, addr, buf, len + 1, pdMS_TO_TICKS(1000));
+    err = i2c_master_stop(cmd);
+    if (err != ESP_OK) goto cleanup;
+
+    err = i2c_master_cmd_begin(bus->port, cmd, pdMS_TO_TICKS(1000));
+
+    cleanup:
+        i2c_cmd_link_delete(cmd);
+    return err;
 }
 
 esp_err_t hal_i2c_write_byte(hal_i2c_bus_t *bus, uint8_t addr, uint8_t reg, uint8_t value)
