@@ -1,0 +1,2 @@
+version: "1.0.0"
+description: "RC522 sensor driver for ESP-IDF"
